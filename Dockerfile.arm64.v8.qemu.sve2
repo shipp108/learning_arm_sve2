@@ -1,0 +1,32 @@
+FROM arm64v8/ubuntu:18.04
+
+RUN apt-get update && \
+    apt-get install -y --allow-downgrades --no-install-recommends --fix-missing \
+    libc6-dev \
+    vim cmake make curl python \
+    tcl environment-modules \
+    qemu binfmt-support qemu-user-static
+
+# download from https://developer.arm.com/downloads/-/arm-instruction-emulator
+ADD arm-compiler-for-linux_22.1_Ubuntu-18.04_aarch64.tar /tmp/
+
+RUN bash /tmp/arm-compiler-for-linux_22.1_Ubuntu-18.04/arm-compiler-for-linux_22.1_Ubuntu-18.04.sh -a -f && \
+    rm -rf /tmp/arm-compiler-for-linux_22.1_Ubuntu-18.04
+
+# download from https://developer.arm.com/downloads/-/arm-compiler-for-linux
+ADD ARM-Instruction-Emulator_22.0_AArch64_Ubuntu_18.04.tar.gz /tmp/
+
+RUN bash /tmp/arm-instruction-emulator_22.0_Ubuntu-18.04/arm-instruction-emulator_22.0_Ubuntu-18.04.sh -a -f && \
+    rm -rf /tmp/arm-instruction-emulator_22.0_Ubuntu-18.04 && \
+    rm -rf /tmp/git_hashes.json
+
+RUN apt-get clean -y && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN echo "source /usr/share/modules/init/bash" >> /etc/bash.bashrc
+RUN echo "export MODULEPATH=\$MODULEPATH:/opt/arm/modulefiles" >> /etc/bash.bashrc
+RUN echo "module load acfl/22.1" >> /etc/bash.bashrc
+RUN echo "module load armie22/22.0" >> /etc/bash.bashrc
+
+RUN mkdir /workspace
+WORKDIR /workspace

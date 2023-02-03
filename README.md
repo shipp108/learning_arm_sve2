@@ -26,13 +26,8 @@ armie -msve-vector-bits=512 -i libopcodes_emulated.so ./app_bin
 #### 2.2 执行
 ```
 # 模拟执行
-armie -msve-vector-bits=128 ./app_bin
-
-# 模拟指令统计, 具体用法移步 https://developer.arm.com/documentation/102190/22-0?lang=en
-armie -msve-vector-bits=512 -i libinscount_emulated.so ./app_bin
-armie -msve-vector-bits=512 -i libopcodes_emulated.so ./app_bin
+qemu-aarch64 -cpu max,sve128=on ./app_bin
 ```
-
 
 ## 4 android binary
 > 需要安装支持 SVE 编译的 NDK 版本（NDK 24 及以上版本）

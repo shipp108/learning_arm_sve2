@@ -1,0 +1,27 @@
+FROM ubuntu:20.04
+
+#COPY sources.list.ubuntu20.04.tencent /etc/apt/sources.list
+
+ENV SHELL /bin/bash
+
+RUN apt-get update
+
+RUN apt-get install -y --allow-downgrades --no-install-recommends --fix-missing \
+  gcc-10-aarch64-linux-gnu \
+  g++-10-aarch64-linux-gnu \
+  git \
+  vim \
+  cmake \
+  qemu-user qemu-user-static
+
+RUN apt-get clean -y && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN mkdir /workspace
+WORKDIR /workspace
+
+#########################################
+#qemu-aarch64 -cpu max,sve128=on ./a.out#
+#########################################
+# aarch64-linux-gnu-g++-10 -static -march=armv8-a+sve2 -O2
+# aarch64-linux-gnu-g++-10 -static -march=armv8-a+sve -O2

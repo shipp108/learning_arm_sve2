@@ -22,3 +22,4 @@ include_directories(${CMAKE_SOURCE_DIR})
 set(SVE_UTILS sv_print.cpp)
 
 add_executable(test01 test01.cpp ${SVE_UTILS})
+add_executable(hist_test hist_test.cpp hist.cpp ${SVE_UTILS})
